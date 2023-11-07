@@ -5,6 +5,7 @@ const {
   GraphQLSchema,
   GraphQLList,
   GraphQLNonNull,
+  GraphQLEnumType,
 } = require("graphql");
 // Custom Imports
 const Client = require("../models/clientModel");
@@ -112,6 +113,83 @@ const mutation = new GraphQLObjectType({
 
         const deleteClient = await Client.findByIdAndDelete(id);
         return deleteClient;
+      },
+    },
+    // Add a Project
+    addProject: {
+      type: ProjectType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        description: { type: new GraphQLNonNull(GraphQLString) },
+        status: {
+          type: new GraphQLEnumType({
+            name: "ProjectStatus",
+            values: {
+              new: { value: "Not Started" },
+              progress: { value: "In Progress" },
+              completed: { value: "Completed" },
+            },
+          }),
+          defaultValue: "Not Started",
+        },
+        clientId: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, { name, description, status, clientId }) {
+        const project = new Project({
+          name,
+          description,
+          status,
+          clientId,
+        });
+        return project.save();
+      },
+    },
+    // Delete a Project
+    deleteProject: {
+      type: ProjectType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      async resolve(parent, { id }) {
+        const existingProject = await Project.findById(id);
+        if (!existingProject) {
+          throw new Error("Project not found");
+        }
+
+        const deleteProject = await Project.findByIdAndDelete(id);
+        return deleteProject;
+      },
+    },
+    // Update a Project
+    updateProject: {
+      type: ProjectType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+        name: { type: GraphQLString },
+        description: { type: GraphQLString },
+        status: {
+          type: new GraphQLEnumType({
+            name: "ProjectStatusUpdate",
+            values: {
+              new: { value: "Not Started" },
+              progress: { value: "In Progress" },
+              completed: { value: "Completed" },
+            },
+          }),
+        },
+      },
+      resolve(parent, { id, name, description, status }) {
+        return Project.findByIdAndUpdate(
+          id,
+          {
+            $set: {
+              name,
+              description,
+              status,
+            },
+          },
+          { new: true }
+        );
       },
     },
   },
