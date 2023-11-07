@@ -4,6 +4,7 @@ const {
   GraphQLString,
   GraphQLSchema,
   GraphQLList,
+  GraphQLNonNull,
 } = require("graphql");
 // Custom Imports
 const Client = require("../models/clientModel");
@@ -76,6 +77,47 @@ const RootQuery = new GraphQLObjectType({
   },
 });
 
+// Mutations
+const mutation = new GraphQLObjectType({
+  name: "Mutation",
+  fields: {
+    // Add a Client
+    addClient: {
+      type: ClientType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        phone: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve(parent, { name, email, phone }) {
+        const client = new Client({
+          name,
+          email,
+          phone,
+        });
+        return client.save();
+      },
+    },
+    // Delete a Client
+    deleteClient: {
+      type: ClientType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      async resolve(parent, { id }) {
+        const existingClient = await Client.findById(id);
+        if (!existingClient) {
+          throw new Error("Client not found");
+        }
+
+        const deleteClient = await Client.findByIdAndDelete(id);
+        return deleteClient;
+      },
+    },
+  },
+});
+
 module.exports = new GraphQLSchema({
   query: RootQuery,
+  mutation,
 });
