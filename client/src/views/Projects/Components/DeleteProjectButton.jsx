@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
-import { DELETE_PROJECT } from "../../Projects/graphql/mutations/clientMutations";
+import { DELETE_PROJECT } from "../graphql/mutations/projectMutations";
 import { GET_PROJECTS } from "../../Projects/graphql/queries/projectQueries";
 import { useMutation } from "@apollo/client";
 

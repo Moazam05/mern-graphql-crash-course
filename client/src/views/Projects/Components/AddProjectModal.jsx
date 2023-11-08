@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaList } from "react-icons/fa";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_PROJECTS } from "../graphql/queries/projectQueries";
-import { ADD_PROJECT } from "../graphql/mutations/clientMutations";
+import { ADD_PROJECT } from "../graphql/mutations/projectMutations";
 import { GET_CLIENTS } from "../../Clients/graphql/queries/clientQueries";
 
 const AddProjectModal = () => {
