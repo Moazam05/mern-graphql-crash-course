@@ -111,6 +111,9 @@ const mutation = new GraphQLObjectType({
           throw new Error("Client not found");
         }
 
+        // Find and delete projects
+        await Project.deleteMany({ clientId: id });
+
         const deleteClient = await Client.findByIdAndDelete(id);
         return deleteClient;
       },
