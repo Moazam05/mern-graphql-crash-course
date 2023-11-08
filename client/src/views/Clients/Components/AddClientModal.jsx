@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { useMutation } from "@apollo/client";
-import { ADD_CLIENT } from "../../mutations/clientMutations";
-import { GET_CLIENTS } from "../../queries/clientQueries";
+import { ADD_CLIENT } from "../graphql/mutations/clientMutations";
+import { GET_CLIENTS } from "../graphql/queries/clientQueries";
 
 const AddClientModal = () => {
   const [formData, setFormData] = useState({

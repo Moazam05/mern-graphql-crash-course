@@ -1,8 +1,8 @@
 import React from "react";
 import Spinner from "../../components/Spinner";
 import { useQuery } from "@apollo/client";
-import { GET_PROJECTS } from "../../queries/projectQueries";
-import ProjectCard from "../components/ProjectCard";
+import { GET_PROJECTS } from "./graphql/queries/projectQueries";
+import ProjectCard from "./Components/ProjectCard";
 
 const Projects = () => {
   const { loading, error, data } = useQuery(GET_PROJECTS);
